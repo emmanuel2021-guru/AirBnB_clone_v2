@@ -141,6 +141,9 @@ class HBNBCommand(cmd.Cmd):
             else:
                 attr_dict.update({f_text[0]: int(f_text[1])})
         new_instance.__dict__.update(attr_dict)
+        print(new_instance.__class__.__name__)
+        print(new_instance.__dict__["id"])
+        print(storage.all())
         storage.save()
         print(new_instance.id)
         storage.save()
