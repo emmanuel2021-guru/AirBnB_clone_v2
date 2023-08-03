@@ -18,7 +18,7 @@ class FileStorage:
                 if key.split(".")[0] == cls.__name__:
                     print(key, value)
                     return_dict.update({key: value})
-            return return_dict
+        return return_dict
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
