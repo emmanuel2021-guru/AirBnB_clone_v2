@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
-import sys
+import sys, os
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -141,10 +141,12 @@ class HBNBCommand(cmd.Cmd):
             else:
                 attr_dict.update({f_text[0]: int(f_text[1])})
         new_instance.__dict__.update(attr_dict)
-        print(new_instance.__class__.__name__)
-        print(new_instance.__dict__["id"])
-        print(storage.all())
-        storage.save()
+        print(new_instance.__dict__)
+        if os.environ.get('HBNB_MYSQL_DB') == 'db':
+            storage.new(new_instance.__dict__['_sa_instance_state'])
+            storage.save()
+        else:
+            storage.save()
         print(new_instance.id)
         storage.save()
 
@@ -228,11 +230,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all(HBNBCommand.classes[args]):
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all():
                 print_list.append(str(v))
 
         print(print_list)
@@ -245,7 +247,7 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+        for k, v in storage.all():
             if args == k.split('.')[0]:
                 count += 1
         print(count)
