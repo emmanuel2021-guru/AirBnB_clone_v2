@@ -122,7 +122,6 @@ class HBNBCommand(cmd.Cmd):
         elif text[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[text[0]]()
         attr_dict = {}
         for i in range(1, len(text)):
             f_text = text[i].split("=")
@@ -140,15 +139,15 @@ class HBNBCommand(cmd.Cmd):
                 attr_dict.update({f_text[0]: float(f_text[1])})
             else:
                 attr_dict.update({f_text[0]: int(f_text[1])})
-        new_instance.__dict__.update(attr_dict)
+        """new_instance.__dict__.update(attr_dict)"""
+        new_instance = HBNBCommand.classes[text[0]](**attr_dict)
         print(new_instance.__dict__)
         if os.environ.get('HBNB_MYSQL_DB') == 'db':
-            storage.new(new_instance.__dict__['_sa_instance_state'])
+            storage.new(new_instance)
             storage.save()
         else:
             storage.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
